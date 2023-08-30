@@ -1,0 +1,13 @@
+<h1>Edit User</h1>
+<form method="post" action="{% url 'create_user' %}">
+    {% csrf_token %}
+    <div>
+        <label>First Name</label>
+        <input name="first_name" type="text" value="{{ user.first_name }}">
+    </div>
+    <div>
+        <label>Last Name</label>
+        <input name="last_name" type="text" value="{{ user.last_name }}">
+    </div>
+    <button type="submit">Create</button>
+</form>

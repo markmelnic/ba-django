@@ -1,0 +1,20 @@
+<a href="{% url 'index' %}">
+    View posts
+</a>
+
+<br>
+
+<a href="{% url 'new_user' %}">
+    Create new user
+</a>
+
+<h1>USERS</h1>
+
+{% for user in users %}
+<h3>#{{ user.id }} {{ user.first_name }} {{ user.last_name }}</h3>
+
+{% for post in user.post_list %}
+<p>{{ post.id }} {{ post.title }}</p>
+{% endfor %}
+
+{% endfor %}
