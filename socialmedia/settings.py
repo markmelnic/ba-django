@@ -35,6 +35,9 @@ ALLOWED_HOSTS = ["*"]
 # SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://ba-django-mark123123.up.railway.app"
+]
 
 # Application definition
 
