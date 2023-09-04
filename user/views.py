@@ -1,25 +1,47 @@
 from django.shortcuts import render, redirect
-from django.db.models import prefetch_related_objects
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from .models import User
 
+@login_required # middleware
 def index(request):
-    all_users = User.objects.all()
-
-    [u.load_posts() for u in all_users]
+    current_user = request.user
+    current_user.load_posts()
 
     return render(request, "user/index.html", context={
-        'users': all_users
+        'user': current_user
     })
 
-def new_user(request):
-    return render(request, "user/new.html")
+def login_user(request):
+    if request.method == "GET":
+        return render(request, "user/login.html")
+    elif request.method == "POST":
+        user = authenticate(
+            request,
+            username = request.POST['username'],
+            password = request.POST['password'],
+        )
+        if user:
+            login(request, user)
+            return redirect("/user")
+        else:
+            return redirect("/user/login")
 
-def create(request):
-    new_user = User(
-        first_name = request.POST['first_name'],
-        last_name = request.POST['last_name'],
-    )
-    new_user.save()
+def register(request):
+    if request.method == "GET":
+        return render(request, "user/register.html")
+    elif request.method == "POST":
+        new_user = User.objects.create_user(
+            first_name = request.POST['first_name'],
+            last_name = request.POST['last_name'],
+            username = request.POST['username'],
+            password = request.POST['password'],
+        )
+        new_user.save()
 
-    return redirect("/user")
+        return redirect("/user")
+
+def logout_user(request):
+    logout(request)
+    return redirect('/')

@@ -1,8 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-class User(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+class User(AbstractUser):
     image = models.ImageField(default="")
 
     def load_posts(self):
