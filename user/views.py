@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import User
 
-@login_required # middleware
+@login_required
 def index(request):
     current_user = request.user
     current_user.load_posts()
@@ -32,6 +32,12 @@ def register(request):
     if request.method == "GET":
         return render(request, "user/register.html")
     elif request.method == "POST":
+        existing_user = User.objects.filter(
+            username=request.POST['username']
+        ).all()
+        if existing_user:
+            return redirect("/user/register")
+
         new_user = User.objects.create_user(
             first_name = request.POST['first_name'],
             last_name = request.POST['last_name'],
