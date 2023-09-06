@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
+import threading
+
+from .utils import *
 from .models import Content
 
 def index(request):
     all_posts = Content.objects.all()
+
     return render(request, "content/index.html", context={
-        'posts': all_posts
+        'posts': all_posts,
     })
 
 @login_required
@@ -22,12 +26,10 @@ def edit_page(request, post_id):
 
 @login_required
 def create(request):
-    new_post = Content(
-        title = request.POST['title'],
-        text = request.POST['text'],
-        user_id = request.user.id,
-    )
-    new_post.save()
+    threading.Thread(
+        target=create_post,
+        args=(request, )
+    ).start()
 
     return redirect("/")
 
